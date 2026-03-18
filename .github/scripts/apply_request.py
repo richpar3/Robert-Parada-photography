@@ -135,13 +135,14 @@ def main():
     messages = [{"role": "user", "content": request}]
 
     while True:
-        response = client.messages.create(
+        with client.messages.stream(
             model="claude-haiku-4-5",
             max_tokens=32000,
             system=SYSTEM,
             tools=TOOLS,
             messages=messages,
-        )
+        ) as stream:
+            response = stream.get_final_message()
 
         # Collect tool calls and text
         tool_uses = [b for b in response.content if b.type == "tool_use"]
