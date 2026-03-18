@@ -1,0 +1,44 @@
+name: Apply Site Update Request
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - REQUESTS.md
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Apply request
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python .github/scripts/apply_request.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "Site Bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          # Only commit if something actually changed beyond REQUESTS.md
+          if git diff --cached --name-only | grep -vq "^REQUESTS.md$"; then
+            git commit -m "Apply site update request"
+            git push
+          else
+            echo "No site files were changed — nothing to commit."
+          fi
