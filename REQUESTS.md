@@ -16,4 +16,4 @@ The site will automatically update within a few minutes of saving.
 
 ## Your request
 
-> (Replace this line with your request. For example: "Change the hero text to say 'Available for bookings in 2025'" or "Update the email address in the contact section to rob@example.com")
+Update the email address in the contact section to rob.parada3@gmail.com
